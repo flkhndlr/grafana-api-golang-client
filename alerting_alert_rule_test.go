@@ -10,10 +10,12 @@ import (
 )
 
 func TestAlertRules(t *testing.T) {
-	mockData := strings.Repeat(getAlertRulesJSON+",", 1000) // make 1000 folders.
+
+	mockData := strings.Repeat(getAlertRulesJSON+",", 1000) // make 1000 alertRules.
 	mockData = "[" + mockData[:len(mockData)-1] + "]"       // remove trailing comma; make a json list.
 
-	// This creates 1000 + 1000 + 1 (2001, 3 calls) worth of folders.
+	// This creates 1000 + 1000 + 1 (2001, 3 calls) worth of alertRules.
+
 	client := gapiTestToolsFromCalls(t, []mockServerCall{
 		{200, mockData},
 		{200, mockData},
@@ -32,11 +34,12 @@ func TestAlertRules(t *testing.T) {
 	if len(alertRules) != dashCount {
 		t.Errorf("Length of returned folders should be %d", dashCount)
 	}
-	if alertRules[0].ID != 1 || alertRules[0].Title != "Departmenet ABC" {
-		t.Error("Not correctly parsing returned folders.")
+
+	if alertRules[0].UID != "123abcd" || alertRules[0].Title != "Always in alarm" {
+		t.Error("Not correctly parsing returned alertRules.")
 	}
-	if alertRules[dashCount-1].ID != 1 || alertRules[dashCount-1].Title != "Departmenet ABC" {
-		t.Error("Not correctly parsing returned folders.")
+	if alertRules[dashCount-1].UID != "123abcd" || alertRules[dashCount-1].Title != "Always in alarm" {
+		t.Error("Not correctly parsing returned alertRules.")
 	}
 }
 
